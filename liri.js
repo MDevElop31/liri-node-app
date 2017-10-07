@@ -16,10 +16,10 @@ function liri(input1, input2) {
             spotifyThis(input2)
             break;
         case "movie-this":
-            movieThis(input2)
+            omdbThis(input2)
             break;
         case "do-what-it-says":
-            doWhatItSays();
+            doWhat();
             break;
         default:
             console.log(first + " does not exist.");
@@ -37,7 +37,7 @@ function myTweets() {
     client.get('statuses/user_timeline', {screen_name: user, count: tweetCount}, function(error, tweets) {
 
         if (error) {
-            console.log(error);
+            return console.log(error);
         }
         else {
             var tweet_data = [];
@@ -79,14 +79,52 @@ var spotify = new Spotify(keys.spotifyKeys);
 
 };
 
+function omdbThis(movie) {
+
+        var queryUrl = "http://www.omdbapi.com/?t=" + second + "&y=&plot=short&apikey=40e9cece";
+
+        request(queryUrl, function(error, response, body) {
+
+          // If the request is successful
+          if (!error && response.statusCode === 200) {
+
+            console.log("------------------------------------------------------------"); 
+            console.log("Movie Title: " + JSON.parse(body).Title);
+            console.log("Release Year: " + JSON.parse(body).Year);
+            console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+            console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+            console.log("Produced in: " + JSON.parse(body).Country);
+            console.log("Language: " + JSON.parse(body).Language);
+            console.log("Movie Plot: " + JSON.parse(body).Plot);
+            console.log("Actors: " + JSON.parse(body).Actors);
+            console.log("------------------------------------------------------------"); 
+          };
+        });
+
+};
+
+function doWhat() {
 
 
+        fs.readFile("random.txt", "utf8", function(error, data) {
 
+          // If the code experiences any errors it will log the error to the console.
+          if (error) {
+            return console.log(error);
+          } else {
 
+            var dataArr = data.split(",");
+            console.log(dataArr);
 
+            first = dataArr[0].trim();
+            second = dataArr[1].trim();
 
+            liri(first, second);
+          };
 
+    });
 
+};
 
 
 liri(first, second);
